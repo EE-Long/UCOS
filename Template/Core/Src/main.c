@@ -107,23 +107,23 @@ void SystemClock_Config(void)
 int main(void)
 {
 	OS_ERR  err;
-	OSInit(&err);
-  HAL_Init();
-	SystemClock_Config();
+	OSInit(&err);										//初始化UCOS-3
+  HAL_Init();											//初始化HAL库
+	SystemClock_Config();						//系统时钟配置
 	//MX_GPIO_Init(); 这个在BSP的初始化里也会初始化
-  MX_USART1_UART_Init();	
-	/* 创建任务 */
-	OSTaskCreate((OS_TCB     *)&StartTaskTCB,                /* Create the start task                                */
-				 (CPU_CHAR   *)"start task",
-				 (OS_TASK_PTR ) start_task,
-				 (void       *) 0,
-				 (OS_PRIO     ) START_TASK_PRIO,
-				 (CPU_STK    *)&START_TASK_STK[0],
-				 (CPU_STK_SIZE) START_STK_SIZE/10,
-				 (CPU_STK_SIZE) START_STK_SIZE,
-				 (OS_MSG_QTY  ) 0,
-				 (OS_TICK     ) 0,
-				 (void       *) 0,
+  MX_USART1_UART_Init();					//串口初始化
+	/* 创建开始任务 */
+	OSTaskCreate((OS_TCB     *)&StartTaskTCB,   //任务控制块             /* Create the start task                                */
+				 (CPU_CHAR   *)"start task",					//任务名字
+				 (OS_TASK_PTR ) start_task,						//任务函数
+				 (void       *) 0,										//传递给任务函数的参数
+				 (OS_PRIO     ) START_TASK_PRIO,			//任务优先级
+				 (CPU_STK    *)&START_TASK_STK[0],		//任务堆栈基地址
+				 (CPU_STK_SIZE) START_STK_SIZE/10,		//任务堆栈深度限位
+				 (CPU_STK_SIZE) START_STK_SIZE,				//任务堆栈大小
+				 (OS_MSG_QTY  ) 0,										//禁止接收消息
+				 (OS_TICK     ) 0,										//时间片长度默认
+				 (void       *) 0,										//用户补充的存储区
 				 (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
 				 (OS_ERR     *)&err);
 	/* 启动多任务系统，控制权交给uC/OS-III */
